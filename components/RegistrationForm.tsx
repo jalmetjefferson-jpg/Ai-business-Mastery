@@ -43,20 +43,20 @@ export const RegistrationForm: React.FC = () => {
     try {
       const phoneNumber = formatPhoneNumber(formData.whatsapp);
       
-      const payload = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        waphone: phoneNumber,
-        wnopfx: "234"
-      };
+      // Create form data for webhook
+const formData2 = new URLSearchParams();
+formData2.append('name', formData.name.trim());
+formData2.append('email', formData.email.trim());
+formData2.append('waphone', phoneNumber.replace(/^0/, ''));
+formData2.append('wnopfx', '234');
 
-      const response = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+const response = await fetch(WEBHOOK_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  body: formData2,
+});
 
       if (!response.ok) {
         throw new Error('Webhook request failed');
