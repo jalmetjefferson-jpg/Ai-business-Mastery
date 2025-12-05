@@ -1,14 +1,104 @@
 import React, { useState } from 'react';
-import { FORM_CONFIG } from '../constants';
-import { Lock, User, Mail, Phone, ArrowRight, Loader2 } from 'lucide-react';
+import { WORKSHOP_DETAILS } from '../constants';
+import { Lock, User, Mail, Phone, ArrowRight, Loader2, MessageCircle } from 'lucide-react';
+
+const WEBHOOK_URL = 'https://app.wamation.com.ng/endpoint?auth=KvVtLmGjU4RxAHdWTkSPIFgopCQNJ240988';
+const WHATSAPP_LINK = WORKSHOP_DETAILS.whatsappLink;
 
 export const RegistrationForm: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    whatsapp: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    setIsSubmitting(true);
-    // Form submits natively, so no preventDefault()
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setError(null); // Clear error when user types
   };
+
+  const formatPhoneNumber = (phone: string): string => {
+    // Remove all non-digit characters
+    const digits = phone.replace(/\D/g, '');
+    // Return with country code prefix
+    return `234${digits}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    // Validate all fields
+    if (!formData.name.trim() || !formData.email.trim() || !formData.whatsapp.trim()) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const phoneNumber = formatPhoneNumber(formData.whatsapp);
+      
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        waphone: phoneNumber,
+        wnopfx: "234"
+      };
+
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Webhook request failed');
+      }
+
+      // Success!
+      setIsSuccess(true);
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setError('Something went wrong. Please try again.');
+      setIsSubmitting(false);
+    }
+  };
+
+  // Success State
+  if (isSuccess) {
+    return (
+      <div className="bg-brand-card border border-brand-gray p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg mx-auto w-full">
+        <div className="text-center">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 mb-4">
+              <span className="text-4xl">✅</span>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Perfect! Your spot is reserved.</h3>
+            <p className="text-gray-400 text-sm">
+              We've received your registration. Continue on WhatsApp to finalize your enrollment.
+            </p>
+          </div>
+          
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 w-full py-4 px-6 border border-transparent rounded-lg text-base font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform hover:scale-[1.02] shadow-lg shadow-green-600/20"
+          >
+            <MessageCircle size={20} />
+            Continue on WhatsApp with Jefferson
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-brand-card border border-brand-gray p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg mx-auto w-full">
@@ -17,16 +107,16 @@ export const RegistrationForm: React.FC = () => {
         <p className="text-gray-400 text-sm">Fill the details below to join the workshop.</p>
       </div>
 
+      {error && (
+        <div className="mb-5 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <p className="text-red-400 text-sm text-center">{error}</p>
+        </div>
+      )}
+
       <form 
-        action={FORM_CONFIG.action} 
-        method="POST" 
         onSubmit={handleSubmit}
         className="space-y-5"
       >
-        {/* Hidden Fields */}
-        {Object.entries(FORM_CONFIG.hiddenFields).map(([name, value]) => (
-          <input key={name} type="hidden" name={name} value={value} />
-        ))}
 
         {/* Name */}
         <div>
@@ -39,8 +129,11 @@ export const RegistrationForm: React.FC = () => {
               type="text"
               name="name"
               id="name"
+              value={formData.name}
+              onChange={handleChange}
               required
-              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              disabled={isSubmitting}
+              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="Enter your full name"
             />
           </div>
@@ -57,8 +150,11 @@ export const RegistrationForm: React.FC = () => {
               type="email"
               name="email"
               id="email"
+              value={formData.email}
+              onChange={handleChange}
               required
-              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              disabled={isSubmitting}
+              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="you@example.com"
             />
           </div>
@@ -76,10 +172,13 @@ export const RegistrationForm: React.FC = () => {
             </span>
             <input
               type="tel"
-              name="whatsapp_number" // Typically mapped to whatsapp_number or similar in WAMission
+              name="whatsapp"
               id="whatsapp"
+              value={formData.whatsapp}
+              onChange={handleChange}
               required
-              className="flex-1 block w-full px-3 py-3 bg-brand-dark border border-brand-gray rounded-none rounded-r-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              disabled={isSubmitting}
+              className="flex-1 block w-full px-3 py-3 bg-brand-dark border border-brand-gray rounded-none rounded-r-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="80 1234 5678"
             />
           </div>
@@ -90,12 +189,12 @@ export const RegistrationForm: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-lg text-base font-bold text-white bg-brand-orange hover:bg-brand-orangeHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-orange transition-all transform hover:scale-[1.02] shadow-lg shadow-brand-orange/20"
+          className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-lg text-base font-bold text-white bg-brand-orange hover:bg-brand-orangeHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-orange transition-all transform hover:scale-[1.02] shadow-lg shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="animate-spin mr-2" size={20} />
-              Processing...
+              Submitting...
             </>
           ) : (
             <>
