@@ -1,104 +1,25 @@
 import React, { useState } from 'react';
-import { WORKSHOP_DETAILS } from '../constants';
-import { Lock, User, Mail, Phone, ArrowRight, Loader2, MessageCircle } from 'lucide-react';
-
-const WEBHOOK_URL = 'https://app.wamation.com.ng/endpoint?auth=KvVtLmGjU4RxAHdWTkSPIFgopCQNJ240988';
-const WHATSAPP_LINK = WORKSHOP_DETAILS.whatsappLink;
+import { WORKSHOP_DETAILS, FORM_CONFIG } from '../constants';
+import { Lock, User, Mail, Phone, ArrowRight, Loader2 } from 'lucide-react';
 
 export const RegistrationForm: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    whatsapp: ''
+    waphone: '',
+    wnopfx: '234'
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    setError(null); // Clear error when user types
   };
 
-  const formatPhoneNumber = (phone: string): string => {
-    // Remove all non-digit characters
-    const digits = phone.replace(/\D/g, '');
-    // Return with country code prefix
-    return `234${digits}`;
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-
-    // Validate all fields
-    if (!formData.name.trim() || !formData.email.trim() || !formData.whatsapp.trim()) {
-      setError('Please fill in all fields.');
-      return;
-    }
-
+  const handleSubmit = () => {
     setIsSubmitting(true);
-
-    try {
-      const phoneNumber = formatPhoneNumber(formData.whatsapp);
-      
-      // Create form data for webhook
-const formData2 = new URLSearchParams();
-formData2.append('name', formData.name.trim());
-formData2.append('email', formData.email.trim());
-formData2.append('waphone', phoneNumber.replace(/^0/, ''));
-formData2.append('wnopfx', '234');
-
-const response = await fetch(WEBHOOK_URL, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-  },
-  body: formData2,
-});
-
-      if (!response.ok) {
-        throw new Error('Webhook request failed');
-      }
-
-      // Success!
-      setIsSuccess(true);
-    } catch (err) {
-      console.error('Form submission error:', err);
-      setError('Something went wrong. Please try again.');
-      setIsSubmitting(false);
-    }
+    // Allow native submission
   };
-
-  // Success State
-  if (isSuccess) {
-    return (
-      <div className="bg-brand-card border border-brand-gray p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg mx-auto w-full">
-        <div className="text-center">
-          <div className="mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 mb-4">
-              <span className="text-4xl">✅</span>
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">Perfect! Your spot is reserved.</h3>
-            <p className="text-gray-400 text-sm">
-              We've received your registration. Continue on WhatsApp to finalize your enrollment.
-            </p>
-          </div>
-          
-          <a
-            href={WHATSAPP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 w-full py-4 px-6 border border-transparent rounded-lg text-base font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform hover:scale-[1.02] shadow-lg shadow-green-600/20"
-          >
-            <MessageCircle size={20} />
-            Continue on WhatsApp with Jefferson
-          </a>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-brand-card border border-brand-gray p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg mx-auto w-full">
@@ -107,20 +28,20 @@ const response = await fetch(WEBHOOK_URL, {
         <p className="text-gray-400 text-sm">Fill the details below to join the workshop.</p>
       </div>
 
-      {error && (
-        <div className="mb-5 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-          <p className="text-red-400 text-sm text-center">{error}</p>
-        </div>
-      )}
-
-      <form 
+      <form
+        action={FORM_CONFIG.action}
+        method="POST"
         onSubmit={handleSubmit}
         className="space-y-5"
       >
+        {/* Hidden Fields for WAMission */}
+        {Object.entries(FORM_CONFIG.hiddenFields).map(([key, value]) => (
+          <input key={key} type="hidden" name={key} value={value} />
+        ))}
 
-        {/* Name */}
+        {/* Name (name="name") */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1.5">Full Name</label>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1.5">First Name</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <User size={18} className="text-gray-500" />
@@ -132,14 +53,13 @@ const response = await fetch(WEBHOOK_URL, {
               value={formData.name}
               onChange={handleChange}
               required
-              disabled={isSubmitting}
-              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="Enter your full name"
+              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              placeholder="Enter first name"
             />
           </div>
         </div>
 
-        {/* Email */}
+        {/* Email (name="email") */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">Email Address</label>
           <div className="relative">
@@ -153,32 +73,45 @@ const response = await fetch(WEBHOOK_URL, {
               value={formData.email}
               onChange={handleChange}
               required
-              disabled={isSubmitting}
-              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
               placeholder="you@example.com"
             />
           </div>
         </div>
 
-        {/* WhatsApp */}
+        {/* WhatsApp (name="waphone" + name="wnopfx") */}
         <div>
-          <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-300 mb-1.5">WhatsApp Number</label>
+          <label htmlFor="waphone" className="block text-sm font-medium text-gray-300 mb-1.5">WhatsApp Number</label>
           <div className="relative flex rounded-lg shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
               <Phone size={18} className="text-gray-500" />
             </div>
-            <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-brand-gray bg-brand-dark text-gray-400 text-sm pl-10">
-              +234
-            </span>
+
+            {/* Country Code Dropdown (name="wnopfx") */}
+            <select
+              name="wnopfx"
+              value={formData.wnopfx}
+              onChange={handleChange}
+              className="inline-flex items-center px-2 py-3 rounded-l-md border border-r-0 border-brand-gray bg-brand-dark text-gray-400 text-sm pl-10 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              style={{ minWidth: "120px" }}
+            >
+              <option value="234">NG +234</option>
+              <option value="233">GH +233</option>
+              <option value="254">KE +254</option>
+              <option value="27">ZA +27</option>
+              <option value="44">UK +44</option>
+              <option value="1">US +1</option>
+            </select>
+
+            {/* Phone Number Input (name="waphone") */}
             <input
               type="tel"
-              name="whatsapp"
-              id="whatsapp"
-              value={formData.whatsapp}
+              name="waphone"
+              id="waphone"
+              value={formData.waphone}
               onChange={handleChange}
               required
-              disabled={isSubmitting}
-              className="flex-1 block w-full px-3 py-3 bg-brand-dark border border-brand-gray rounded-none rounded-r-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 block w-full px-3 py-3 bg-brand-dark border border-brand-gray rounded-none rounded-r-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
               placeholder="80 1234 5678"
             />
           </div>

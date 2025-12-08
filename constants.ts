@@ -1,6 +1,6 @@
 export const WORKSHOP_DETAILS = {
-  currentPrice: "₦40,000",
-  futurePrice: "₦50,000",
+  currentPrice: "₦50,000",
+  futurePrice: "₦60,000",
   savings: "₦10,000",
   deadlineDate: "2024-12-08T23:59:59",
   whatsappLink: "https://wa.me/2347077443274?text=Hi%20Jefferson,%20I'm%20interested%20in%20the%20AI%20Business%20Mastery%20workshop.%20Can%20you%20tell%20me%20more?",
@@ -10,10 +10,10 @@ export const FORM_CONFIG = {
   action: "https://app.wamation.com.ng/processor",
   hiddenFields: {
     zq: "40988",
-    fid: "eecacba83f40988",
     pid: "",
     bumppid: "0",
     cid: "",
+    fid: "dd4911c09640988",
     usp: "0",
     grk: "",
     pvar: "",

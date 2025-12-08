@@ -31,12 +31,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-brand-dark text-gray-200 selection:bg-brand-orange selection:text-white font-sans">
-      
+
       {/* Top Banner */}
       <div className="bg-brand-orange text-white text-center py-2 px-4 text-xs sm:text-sm font-bold tracking-wide uppercase">
-        ⚡ Cyber Week Special: Price Increases December 8th
+        ⚡ PRICE INCREASES MONDAY
       </div>
-
       {/* Hero Section */}
       <header className="relative pt-16 pb-20 sm:pt-24 sm:pb-32 overflow-hidden">
         {/* Background Grid */}
@@ -51,7 +50,7 @@ function App() {
             </span>
             Live Workshop for Nigerian Business Owners
           </div>
-          
+
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6 leading-tight">
             Master AI For Your <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-red-500">
@@ -59,19 +58,19 @@ function App() {
             </span>{" "}
             in 3 Days
           </h1>
-          
+
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-gray-400 mb-10 leading-relaxed">
             Learn <strong>Context Engineering</strong> – the system that makes AI write like YOU, not like a generic robot. Turn ChatGPT into a trained team member that understands your voice, offers, and Nigerian audience.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button 
+            <button
               onClick={scrollToPricing}
               className="w-full sm:w-auto px-8 py-4 bg-brand-orange hover:bg-brand-orangeHover text-white font-bold rounded-lg transition-all shadow-lg shadow-brand-orange/25 text-lg"
             >
               Get Your Ticket Now
             </button>
-            <button 
+            <button
               onClick={() => {
                 const element = document.getElementById('problems');
                 if (element) element.scrollIntoView({ behavior: 'smooth' });
@@ -106,7 +105,7 @@ function App() {
             {/* Left: Pricing & Urgency */}
             <div className="md:sticky md:top-8">
               <PricingBox />
-              
+
               <div className="mt-6 md:mt-8 bg-brand-card/50 border border-brand-gray rounded-xl p-6">
                 <h4 className="font-bold text-white mb-2">100% Satisfaction Guarantee</h4>
                 <p className="text-sm text-gray-400">
@@ -117,7 +116,7 @@ function App() {
 
             {/* Right: Registration Form */}
             <div className="mt-0 md:mt-0">
-               <RegistrationForm />
+              <RegistrationForm />
             </div>
           </div>
         </div>
