@@ -1,8 +1,4 @@
 export const WORKSHOP_DETAILS = {
-  currentPrice: "₦50,000",
-  futurePrice: "₦60,000",
-  savings: "₦10,000",
-  deadlineDate: "2024-12-08T23:59:59",
   whatsappLink: "https://wa.me/2347077443274?text=Hi%20Jefferson,%20I'm%20interested%20in%20the%20AI%20Business%20Mastery%20workshop.%20Can%20you%20tell%20me%20more?",
 };
 

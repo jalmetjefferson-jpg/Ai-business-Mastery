@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { WORKSHOP_DETAILS, FORM_CONFIG } from '../constants';
-import { Lock, User, Mail, Phone, ArrowRight, Loader2 } from 'lucide-react';
+import { FORM_CONFIG } from '../constants';
+import { User, Mail, Phone, ArrowRight, Loader2 } from 'lucide-react';
 
 export const RegistrationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,8 +24,8 @@ export const RegistrationForm: React.FC = () => {
   return (
     <div className="bg-brand-card border border-brand-gray p-6 md:p-8 rounded-2xl shadow-2xl max-w-lg mx-auto w-full">
       <div className="text-center mb-6 md:mb-8">
-        <h3 className="text-2xl font-bold text-white mb-2">Reserve My Spot</h3>
-        <p className="text-gray-400 text-sm">Fill the details below to join the workshop.</p>
+        <h3 className="text-2xl font-bold text-white mb-2">Want The Full Details?</h3>
+        <p className="text-gray-400 text-sm">Drop your info. I'll send everything to your WhatsApp — what's covered, when it starts, how to join.</p>
       </div>
 
       <form
@@ -53,28 +53,8 @@ export const RegistrationForm: React.FC = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
               placeholder="Enter first name"
-            />
-          </div>
-        </div>
-
-        {/* Email (name="email") */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">Email Address</label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Mail size={18} className="text-gray-500" />
-            </div>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
-              placeholder="you@example.com"
             />
           </div>
         </div>
@@ -92,7 +72,7 @@ export const RegistrationForm: React.FC = () => {
               name="wnopfx"
               value={formData.wnopfx}
               onChange={handleChange}
-              className="inline-flex items-center px-2 py-3 rounded-l-md border border-r-0 border-brand-gray bg-brand-dark text-gray-400 text-sm pl-10 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              className="inline-flex items-center px-2 py-3 rounded-l-md border border-r-0 border-brand-gray bg-brand-dark text-gray-400 text-sm pl-10 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
               style={{ minWidth: "120px" }}
             >
               <option value="234">NG +234</option>
@@ -111,36 +91,54 @@ export const RegistrationForm: React.FC = () => {
               value={formData.waphone}
               onChange={handleChange}
               required
-              className="flex-1 block w-full px-3 py-3 bg-brand-dark border border-brand-gray rounded-none rounded-r-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent transition-all"
+              className="flex-1 block w-full px-3 py-3 bg-brand-dark border border-brand-gray rounded-none rounded-r-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
               placeholder="80 1234 5678"
             />
           </div>
-          <p className="mt-1 text-xs text-gray-500">We'll send your access details here.</p>
         </div>
 
-        {/* Submit Button */}
+        {/* Email (name="email") */}
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5">Email Address</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Mail size={18} className="text-gray-500" />
+            </div>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="block w-full pl-10 pr-3 py-3 bg-brand-dark border border-brand-gray rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+              placeholder="you@example.com"
+            />
+          </div>
+        </div>
+
+        {/* Submit Button - Bright Green */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-lg text-base font-bold text-white bg-brand-orange hover:bg-brand-orangeHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-orange transition-all transform hover:scale-[1.02] shadow-lg shadow-brand-orange/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          className="w-full flex items-center justify-center py-4 px-6 border border-transparent rounded-lg text-base font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform hover:scale-[1.02] shadow-lg shadow-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="animate-spin mr-2" size={20} />
-              Submitting...
+              Sending...
             </>
           ) : (
             <>
-              Reserve My Spot Now
+              Send Me The Details
               <ArrowRight className="ml-2" size={20} />
             </>
           )}
         </button>
 
-        <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-4">
-          <Lock size={12} />
-          <span>Secure SSL Encryption. Your data is safe.</span>
-        </div>
+        <p className="text-center text-xs text-gray-500 mt-4">
+          Takes 10 seconds • No spam • Unsubscribe anytime
+        </p>
       </form>
     </div>
   );
