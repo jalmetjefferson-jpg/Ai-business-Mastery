@@ -1,42 +1,64 @@
 import React from 'react';
-import { Award } from 'lucide-react';
+import { Clock, Users, DollarSign } from 'lucide-react';
 
 export const InstructorSection: React.FC = () => {
+    const stats = [
+        { value: "6+", label: "YEARS EXP", icon: <Clock size={20} className="text-brand-orange" /> },
+        { value: "25,000+", label: "STUDENTS", icon: <Users size={20} className="text-brand-orange" /> },
+        { value: "$3M+", label: "GENERATED", icon: <DollarSign size={20} className="text-brand-orange" /> }
+    ];
+
     return (
-        <section className="py-16 bg-brand-dark">
+        <section className="py-20 bg-brand-dark">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-                        Who's Teaching
-                    </h2>
-                    <div className="w-24 h-1 bg-brand-orange mx-auto rounded-full"></div>
+                {/* Tag */}
+                <div className="text-center mb-6">
+                    <span className="inline-block px-4 py-2 bg-brand-orange/10 border border-brand-orange/30 rounded-full text-brand-orange text-sm font-semibold uppercase tracking-wider">
+                        Meet Your Instructor
+                    </span>
                 </div>
 
-                <div className="flex flex-col md:flex-row items-center gap-8 bg-brand-card border border-brand-gray rounded-2xl p-8">
+                {/* Headline */}
+                <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+                    Who Is Behind AI Business Mastery?
+                </h2>
+
+                <div className="bg-brand-card border border-brand-gray rounded-2xl p-8 md:p-12">
                     {/* Photo */}
-                    <div className="shrink-0">
-                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-brand-orange to-red-600 p-1">
-                            <div className="w-full h-full rounded-full bg-brand-dark flex items-center justify-center overflow-hidden">
-                                {/* Placeholder - replace with actual photo */}
-                                <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-                                    <span className="text-4xl md:text-5xl font-bold text-brand-orange">K</span>
-                                </div>
-                            </div>
+                    <div className="flex justify-center mb-8">
+                        <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-brand-orange/30 shadow-lg shadow-brand-orange/10">
+                            <img
+                                src="/kenny.jpg.jpeg"
+                                alt="Kenny Nwokoye"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                     </div>
 
-                    {/* Info */}
-                    <div className="text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-orange/10 rounded-full text-brand-orange text-sm font-medium mb-3">
-                            <Award size={14} />
-                            AI Systems Expert
-                        </div>
-                        <h3 className="text-2xl font-bold text-white mb-3">Kenny Nwokoye</h3>
-                        <p className="text-gray-400 leading-relaxed max-w-lg">
-                            Kenny has helped hundreds of Nigerian business owners leverage AI to create content faster,
-                            automate their workflows, and scale their businesses without burning out.
-                            He's the go-to expert for making AI work in the Nigerian context.
+                    {/* Name */}
+                    <h3 className="text-2xl font-bold text-white text-center mb-6">Kenny Nwokoye</h3>
+
+                    {/* Bio */}
+                    <div className="space-y-4 text-gray-300 text-lg leading-relaxed max-w-2xl mx-auto text-center">
+                        <p>
+                            I'm not just another "AI Expert" who popped up yesterday. I'm an internet entrepreneur who has built real businesses to scale. I spent years doing things the hard way—manually writing copy, designing funnels, and creating content—before realizing there was a better way.
                         </p>
+                        <p>
+                            I built this system because I needed it. Now, I'm handing you the exact playbook I use to run a simple, high-profit AI powered operation whether you have a team or not.
+                        </p>
+                    </div>
+
+                    {/* Stats Row */}
+                    <div className="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-brand-gray">
+                        {stats.map((stat, idx) => (
+                            <div key={idx} className="text-center">
+                                <div className="flex items-center justify-center gap-2 mb-1">
+                                    {stat.icon}
+                                    <span className="text-2xl md:text-3xl font-bold text-white">{stat.value}</span>
+                                </div>
+                                <span className="text-xs text-gray-500 font-semibold tracking-wider">{stat.label}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
